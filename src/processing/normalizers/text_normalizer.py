@@ -1,13 +1,19 @@
 from collections import Counter
+from typing import List, Tuple, Type
 
 import pymorphy2
 
+from processing.utils import languages
+
 
 class TextNormalizer:
-    def __init__(self, language="ru"):
-        self.morph = pymorphy2.MorphAnalyzer(lang=language)
+    def __init__(self, language: str):
+        if language not in languages:
+            raise ValueError(f"Wrong language! Available languages: {languages.keys()}")
 
-    def normalize(self, keyphrases):
+        self.morph = pymorphy2.MorphAnalyzer(lang=languages[language])
+
+    def normalize(self, keyphrases: List[Tuple[float, str]]) -> Type[Counter]:
         filtered_tokens = []
         for _, text in keyphrases:
             for word in text.split():
