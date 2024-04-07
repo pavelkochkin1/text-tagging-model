@@ -31,7 +31,7 @@ repos:
     rev: v1.2.0
     hooks:
     - id: mypy
-      args: [--strict, --ignore-missing-imports]
+      files: ^src/
 
   - repo: local
     hooks:

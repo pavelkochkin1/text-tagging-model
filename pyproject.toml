@@ -15,6 +15,12 @@ packages = [{include = "src"}]
 python = "^3.9"
 rouge = "^1.0.1"
 numpy = "^1.26.4"
+scikit-learn = "^1.4.1.post1"
+pymorphy2 = "^0.9.1"
+nltk = "^3.8.1"
+rake-nltk = "^1.0.6"
+coloredlogs = "^15.0.1"
+fasttext = {git = "https://github.com/facebookresearch/fastText"}
 
 
 [tool.poetry.group.dev.dependencies]
@@ -33,7 +39,8 @@ coverage = "^7.4.4"
 pythonpath = [
   ".", "src",
 ]
-
+testpaths = ["./tests/"]
+filterwarnings = ["ignore::DeprecationWarning"]
 
 [tool.black]
 line-length = 100
@@ -45,7 +52,6 @@ multi_line_output = 3
 include_trailing_comma = true
 use_parentheses = true
 ensure_newline_before_comments = true
-
 
 [tool.coverage.run]
 branch = true
