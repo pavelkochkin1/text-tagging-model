@@ -1,31 +1,9 @@
-# flake8: noqa
 import logging
-import os
-import sys
+
+# import sys
+from logging import Logger
 
 import coloredlogs
-
-# TODO: сделать этот модуль в тестах, потому что текущий проект это либа-модель для пользования в сервисе генерации
-
-# ---------------------------------------------------------------------------
-# App parameters
-# ---------------------------------------------------------------------------
-
-MAX_TOP_KEYWORDS = 10
-MIN_KEYWORD_COUNT = 2
-KEYPHRASES_MAX_LENGTH = 10
-
-LANGUAGE = "russian"
-DISTANCE_METRIC = "cosine"
-
-MODELS_PATH = "../resources/models"
-FASTTEXT_MODEL_NAME = "cc.ru.300.bin"
-FASTTEXT_PATH = os.path.join(MODELS_PATH, FASTTEXT_MODEL_NAME)
-
-
-# ---------------------------------------------------------------------------
-# Logger class
-# ---------------------------------------------------------------------------
 
 
 class LoggerFactory:
@@ -39,7 +17,7 @@ class LoggerFactory:
     }
 
     @classmethod
-    def get_logger(cls, name: str = __name__, level: int = logging.DEBUG):
+    def get_logger(cls, name: str = __name__, level: int = logging.DEBUG) -> Logger:
         # Create logger with the specified name
         local_logger = logging.getLogger(name)
         local_logger.setLevel(level)
@@ -63,4 +41,4 @@ class LoggerFactory:
 
 
 logger = LoggerFactory().get_logger()
-sys.modules["logger"] = logger
+# sys.modules["logger"] = logger
