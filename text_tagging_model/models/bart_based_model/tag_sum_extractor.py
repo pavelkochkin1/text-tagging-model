@@ -97,7 +97,7 @@ class TagSumExtractor:
         """
 
         keyphrase = self.summarizator.get_summary(text.lower())
-        normalized_keyphrase = list(map(self.normalizer.normalize, keyphrase))
+        normalized_keyphrase = self.normalizer.normalize(keyphrase)
         most_co_occurring_words = np.array(
             [
                 word
