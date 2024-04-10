@@ -4,7 +4,7 @@ import numpy as np
 from tqdm import tqdm
 
 from text_tagging_model.logger_config import logger
-from text_tagging_model.models.rake_extractor.keyphrases_extractor import RakeKeyphrasesExtractor
+from text_tagging_model.models.rake_based_model.keyphrases_extractor import RakeKeyphrasesExtractor
 from text_tagging_model.processing.analyzer.word_vector_ranker import WordVectorRanker
 from text_tagging_model.processing.normalizers.text_normalizer import TextNormalizer
 

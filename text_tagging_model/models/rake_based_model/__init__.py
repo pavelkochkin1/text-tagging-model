@@ -1,0 +1,2 @@
+from text_tagging_model.models.rake_based_model.keyphrases_extractor import RakeKeyphrasesExtractor
+from text_tagging_model.models.rake_based_model.keyword_extractor import KeywordExtractor
