@@ -1,21 +1,19 @@
-import os
-
 import pytest
 
-from text_tagging_model.models.rake_based_model import KeywordExtractor
+from text_tagging_model.models.rake_based_model import TagsExtractor
 
 
 @pytest.fixture
-def keyword_extractor_model() -> KeywordExtractor:
-    model = KeywordExtractor(
+def tags_extractor() -> TagsExtractor:
+    model = TagsExtractor(
         language="russian",
-        model_name=os.path.abspath("resources/models/cc.ru.300.bin"),
+        fasttext_model_path="./resources/models/cc.ru.300.bin",
     )
 
     return model
 
 
-def test_rake_extractor_case(keyword_extractor_model: pytest.fixture) -> None:
+def test_rake_extractor_case(tags_extractor: TagsExtractor) -> None:
     source_text = """
         Методы ускорения инференса.
         Дистилляция
@@ -27,14 +25,20 @@ def test_rake_extractor_case(keyword_extractor_model: pytest.fixture) -> None:
         Задача Knowledge Distillation состоит в том,
         чтобы минимизировать потери (loss) между фичами — предсказаниями учителя и студента.
     """
-    tags = keyword_extractor_model.extract(source_text, 5, 2)
-    assert tags.tolist() == ["модель", "задача", "метод", "студент", "учитель"]
+    tags = tags_extractor.extract(source_text, 5)
+    assert tags == ["модель", "задача", "метод", "студент", "учитель"]
 
 
 def test_rake_extractor_errors() -> None:
-
+    # lang error
     with pytest.raises(ValueError):
-        KeywordExtractor(
+        TagsExtractor(
             language="err",
-            model_name="text-tagging-model/resources/models/cc.ru.300.bin",
+            fasttext_model_path="./resources/models/cc.ru.300.bin",
+        )
+    # model path error
+    with pytest.raises(ValueError):
+        TagsExtractor(
+            language="err",
+            fasttext_model_path="./resources/models/cc.ru.300.bin",
         )
