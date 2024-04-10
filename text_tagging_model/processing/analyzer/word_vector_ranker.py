@@ -5,8 +5,8 @@ import fasttext.util
 import numpy as np
 from sklearn.metrics.pairwise import pairwise_distances
 
-from src.logger_config import logger
-from src.processing.utils import languages
+from text_tagging_model.logger_config import logger
+from text_tagging_model.processing.utils import languages
 
 
 class WordVectorRanker:

@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from src.models.rake_extractor.keyword_extractor import KeywordExtractor
+from text_tagging_model.models.rake_extractor.keyword_extractor import KeywordExtractor
 
 
 @pytest.fixture

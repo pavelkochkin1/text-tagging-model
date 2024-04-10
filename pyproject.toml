@@ -9,7 +9,7 @@ authors = [
     "Stephan Olizko <uknwn>"
 ]
 readme = "README.md"
-packages = [{include = "src"}]
+packages = [{include = "text_tagging_model"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -39,7 +39,7 @@ coverage = "^7.4.4"
 
 [tool.pytest.ini_options]
 pythonpath = [
-  ".", "src",
+  ".", "text_tagging_model",
 ]
 testpaths = ["./tests/"]
 filterwarnings = ["ignore::DeprecationWarning"]
@@ -57,7 +57,7 @@ ensure_newline_before_comments = true
 
 [tool.coverage.run]
 branch = true
-source = ["src"]
+source = ["text_tagging_model"]
 command_line = "-m pytest"
 
 [tool.coverage.report]

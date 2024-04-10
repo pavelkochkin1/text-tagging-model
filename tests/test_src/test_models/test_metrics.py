@@ -1,4 +1,4 @@
-from src.models.metrics import rouge_score_corpus
+from text_tagging_model.models.metrics import rouge_score_corpus
 
 
 def test_rogue_score_corpus() -> None:
