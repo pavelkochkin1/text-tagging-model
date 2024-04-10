@@ -1,18 +1,17 @@
 from collections import Counter
-from itertools import chain
 from typing import List
 
 import numpy as np
 from tqdm import tqdm
 
-from text_tagging_model.models.rake_based_model.keyphrases_extractor import RakeKeyphrasesExtractor
-from text_tagging_model.processing.embedder.fasttext_embedder import FastTextEmbedder
+from text_tagging_model.processing.embedder.hg_embedder import HGEmbedder
 from text_tagging_model.processing.normalizers import NounsKeeper, PunctDeleter, StopwordsDeleter
 from text_tagging_model.processing.normalizers.pipe import NormalizersPipe
 from text_tagging_model.processing.ranker.max_distance_ranker import MaxDistanceRanker
+from text_tagging_model.processing.summarizator.bart_summarization import MBartSummarizator
 
 
-class TagsExtractor:
+class TagSumExtractor:
     """
     The class is used to extract keywords from the text.
 
@@ -32,11 +31,13 @@ class TagsExtractor:
 
     def __init__(
         self,
+        summarizator_model: str = "IlyaGusev/mbart_ru_sum_gazeta",
+        embedder_model: str = "cointegrated/rubert-tiny2",
         language: str = "russian",
-        fasttext_model_path: str = "cc.ru.300.bin",
         min_cnt_keyword: int = 2,
+        device: str = "cpu",
     ) -> None:
-        self.extractor = RakeKeyphrasesExtractor(language=language)
+        self.summarizator = MBartSummarizator(summarizator_model, device=device)
         self.normalizer = NormalizersPipe(
             [
                 PunctDeleter(),
@@ -46,7 +47,7 @@ class TagsExtractor:
             final_split=True,
         )
 
-        embedder = FastTextEmbedder(fasttext_model_path)
+        embedder = HGEmbedder(embedder_model)
         self.ranker = MaxDistanceRanker(embedder)
         self.min_cnt_keyword = min_cnt_keyword
 
@@ -95,16 +96,12 @@ class TagsExtractor:
             np.ndarray: array with extracted keywords
         """
 
-        keyphrases_with_scores = self.extractor.extract(text.lower())
-        keyphrases = [text for _, text in keyphrases_with_scores]
-
-        normalized_keyphrases = list(map(self.normalizer.normalize, keyphrases))
-        normalized_words = list(chain(*normalized_keyphrases))
-
+        keyphrase = self.summarizator.get_summary(text.lower())
+        normalized_keyphrase = list(map(self.normalizer.normalize, keyphrase))
         most_co_occurring_words = np.array(
             [
                 word
-                for word, cnt in Counter(normalized_words).most_common(top_n)
+                for word, cnt in Counter(normalized_keyphrase).most_common(top_n)
                 if cnt >= self.min_cnt_keyword
             ]
         )
