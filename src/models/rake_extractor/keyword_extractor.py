@@ -1,9 +1,12 @@
-import numpy as np
+from typing import List
 
-from logger_config import logger
-from models.rake_extractor.keyphrases_extractor import RakeKeyphrasesExtractor
-from processing.analyzer.word_vector_ranker import WordVectorRanker
-from processing.normalizers.text_normalizer import TextNormalizer
+import numpy as np
+from tqdm import tqdm
+
+from src.logger_config import logger
+from src.models.rake_extractor.keyphrases_extractor import RakeKeyphrasesExtractor
+from src.processing.analyzer.word_vector_ranker import WordVectorRanker
+from src.processing.normalizers.text_normalizer import TextNormalizer
 
 
 class KeywordExtractor:
@@ -29,6 +32,34 @@ class KeywordExtractor:
         self.extractor = RakeKeyphrasesExtractor(language=language)
         self.normalizer = TextNormalizer(language=language)
         self.ranker = WordVectorRanker(language=language, model_name=model_name)
+
+    def extract_for_corpus(
+        self,
+        texts: List[str],
+        top_n: int,
+        min_keyword_cnt: int,
+        distance_metric: str = "cosine",
+    ) -> np.ndarray:
+        """Returns extracted keywords for corpus of texts
+
+        Args:
+            texts (List[str]): list with texts
+            top_n (int): number of words to extract
+            min_keyword_cnt (int): min number of words in the extracted phrases
+            distance_metric (str, optional): distance metric,
+            available ['cityblock', 'cosine', 'euclidean', 'l1', 'l2', 'manhattan'].
+            Defaults to "cosine".
+
+        Returns:
+            np.ndarray: array with arrays extracted keywords
+        """
+        extracted_keywords = list()
+
+        for text in tqdm(texts):
+            keywords = self.extract(text, top_n, min_keyword_cnt, distance_metric)
+            extracted_keywords.append(keywords)
+
+        return extracted_keywords
 
     def extract(
         self,

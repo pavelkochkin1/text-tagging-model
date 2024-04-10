@@ -5,7 +5,7 @@ import fasttext.util
 import numpy as np
 from sklearn.metrics.pairwise import pairwise_distances
 
-from logger_config import logger
+from src.logger_config import logger
 from src.processing.utils import languages
 
 
@@ -58,6 +58,9 @@ class WordVectorRanker:
             np.ndarray: array with indexes
         """
         vectors = np.array([self.ft_model[word] for word in words])
+
+        if len(vectors) == 0:
+            return np.array(vectors)
 
         distances = pairwise_distances(vectors, metric=distance_metric).mean(axis=1)
         top_n_indices = (-distances).argsort()
