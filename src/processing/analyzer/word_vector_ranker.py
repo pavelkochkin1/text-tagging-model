@@ -32,6 +32,7 @@ class WordVectorRanker:
             logger.info(
                 f"There is no model: {model_name}; starting downloading model from fasttext repo."
             )
+            # TODO исправить на languages[language]
             fasttext.util.download_model(language, if_exists="ignore")
 
         if language not in languages:
