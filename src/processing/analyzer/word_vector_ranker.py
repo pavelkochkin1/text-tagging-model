@@ -59,6 +59,9 @@ class WordVectorRanker:
         """
         vectors = np.array([self.ft_model[word] for word in words])
 
+        if len(vectors) == 0:
+            return np.array(vectors)
+
         distances = pairwise_distances(vectors, metric=distance_metric).mean(axis=1)
         top_n_indices = (-distances).argsort()
         top_n_keywords = words[top_n_indices][:top_n]

@@ -1,4 +1,4 @@
-from src.models.metrics import rogue_score_corpus
+from src.models.metrics import rouge_score_corpus
 
 
 def test_rogue_score_corpus() -> None:
@@ -11,7 +11,7 @@ def test_rogue_score_corpus() -> None:
         ["n", "k"],
     ]
 
-    scores = rogue_score_corpus(true, pred)
+    scores = rouge_score_corpus(true, pred)
 
     assert round(scores["recall"], 2) == 0.75
     assert round(scores["precision"], 2) == 0.75
