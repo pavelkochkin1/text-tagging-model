@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "text-tagging-model"
-version = "0.1.0"
-description = ""
+version = "0.1.1"
+description = "Here we collected some online and offline models for text tagging."
 authors = [
     "Pavel Kochkin <kochkin27@gmail.com>",
     "Shamil Nurkaev <nurkaievs1204@gmail.com>",
     "Denis <denison03@mail.ru>",
-    "Stephan Olizko <uknwn>"
+    "Stephan Olizko <stepa.olizko@yandex.ru>"
 ]
 readme = "README.md"
 packages = [{include = "text_tagging_model"}]
