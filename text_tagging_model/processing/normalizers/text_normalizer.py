@@ -3,7 +3,7 @@ from typing import Any, List
 
 import pymorphy2
 
-from src.processing.utils import languages
+from text_tagging_model.processing.utils import languages
 
 
 class TextNormalizer:

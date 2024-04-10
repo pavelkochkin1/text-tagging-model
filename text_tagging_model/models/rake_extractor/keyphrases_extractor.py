@@ -4,7 +4,7 @@ import nltk
 from nltk.corpus import stopwords
 from rake_nltk import Rake
 
-from src.processing.utils import languages
+from text_tagging_model.processing.utils import languages
 
 
 class RakeKeyphrasesExtractor:
