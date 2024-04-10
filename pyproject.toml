@@ -14,13 +14,13 @@ packages = [{include = "text_tagging_model"}]
 [tool.poetry.dependencies]
 python = "^3.9"
 rouge = "^1.0.1"
-numpy = "^1.26.4"
+numpy = "~1.25.2"
 scikit-learn = "^1.4.1.post1"
 pymorphy2 = "^0.9.1"
 nltk = "^3.8.1"
 rake-nltk = "^1.0.6"
 coloredlogs = "^15.0.1"
-pandas = "^2.2.1"
+pandas = "^2.0.3"
 tqdm = "^4.66.2"
 fasttext-wheel = "^0.9.2"
 
