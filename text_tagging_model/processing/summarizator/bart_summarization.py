@@ -1,4 +1,4 @@
-from transformers import AutoModel, AutoTokenizer
+from transformers import MBartForConditionalGeneration, MBartTokenizer
 
 
 class MBartSummarizator:
@@ -7,8 +7,8 @@ class MBartSummarizator:
         model_name: str = "IlyaGusev/mbart_ru_sum_gazeta",
         device: str = "cpu",
     ) -> None:
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModel.from_pretrained(model_name).to(device)
+        self.tokenizer = MBartTokenizer.from_pretrained(model_name)
+        self.model = MBartForConditionalGeneration.from_pretrained(model_name).to(device)
         self.device = device
 
     def get_summary(self, text: str) -> str:
