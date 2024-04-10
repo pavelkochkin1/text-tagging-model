@@ -5,7 +5,7 @@ import fasttext.util
 import numpy as np
 from sklearn.metrics.pairwise import pairwise_distances
 
-from logger_config import logger
+from src.logger_config import logger
 from src.processing.utils import languages
 
 

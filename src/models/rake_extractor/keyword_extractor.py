@@ -3,10 +3,10 @@ from typing import List
 import numpy as np
 from tqdm import tqdm
 
-from logger_config import logger
-from models.rake_extractor.keyphrases_extractor import RakeKeyphrasesExtractor
-from processing.analyzer.word_vector_ranker import WordVectorRanker
-from processing.normalizers.text_normalizer import TextNormalizer
+from src.logger_config import logger
+from src.models.rake_extractor.keyphrases_extractor import RakeKeyphrasesExtractor
+from src.processing.analyzer.word_vector_ranker import WordVectorRanker
+from src.processing.normalizers.text_normalizer import TextNormalizer
 
 
 class KeywordExtractor:
