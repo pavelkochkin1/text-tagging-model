@@ -1,17 +1,14 @@
-from collections import Counter
-from typing import List
-
 import numpy as np
-from tqdm import tqdm
 
+from text_tagging_model.models.base_extractor import BaseExtractor
 from text_tagging_model.processing.embedder.hg_embedder import HGEmbedder
 from text_tagging_model.processing.normalizers import NounsKeeper, PunctDeleter, StopwordsDeleter
 from text_tagging_model.processing.normalizers.pipe import NormalizersPipe
-from text_tagging_model.processing.ranker.max_distance_ranker import MaxDistanceRanker
+from text_tagging_model.processing.ranker.text_sim_ranker import TextSimRanker
 from text_tagging_model.processing.summarizator.bart_summarization import MBartSummarizator
 
 
-class TagSumExtractor:
+class TagSumExtractor(BaseExtractor):
     """
     The class is used to extract keywords from the text.
 
@@ -34,7 +31,6 @@ class TagSumExtractor:
         summarizator_model: str = "IlyaGusev/mbart_ru_sum_gazeta",
         embedder_model: str = "cointegrated/rubert-tiny2",
         language: str = "russian",
-        min_cnt_keyword: int = 2,
         device: str = "cpu",
     ) -> None:
         self.summarizator = MBartSummarizator(summarizator_model, device=device)
@@ -42,40 +38,13 @@ class TagSumExtractor:
             [
                 PunctDeleter(),
                 StopwordsDeleter(language),
-                NounsKeeper(language),
+                NounsKeeper(language, keep_latn=True),
             ],
             final_split=True,
         )
 
         embedder = HGEmbedder(embedder_model)
-        self.ranker = MaxDistanceRanker(embedder)
-        self.min_cnt_keyword = min_cnt_keyword
-
-    def extract_for_corpus(
-        self,
-        texts: List[str],
-        top_n: int,
-    ) -> np.ndarray:
-        """Returns extracted keywords for corpus of texts
-
-        Args:
-            texts (List[str]): list with texts
-            top_n (int): number of words to extract
-            min_keyword_cnt (int): min number of words in the extracted phrases
-            distance_metric (str, optional): distance metric,
-            available ['cityblock', 'cosine', 'euclidean', 'l1', 'l2', 'manhattan'].
-            Defaults to "cosine".
-
-        Returns:
-            np.ndarray: array with arrays extracted keywords
-        """
-        extracted_keywords = list()
-
-        for text in tqdm(texts):
-            keywords = self.extract(text, top_n)
-            extracted_keywords.append(keywords)
-
-        return extracted_keywords
+        self.ranker = TextSimRanker(embedder)
 
     def extract(
         self,
@@ -98,14 +67,10 @@ class TagSumExtractor:
 
         keyphrase = self.summarizator.get_summary(text.lower())
         normalized_keyphrase = self.normalizer.normalize(keyphrase)
-        most_co_occurring_words = np.array(
-            [
-                word
-                for word, cnt in Counter(normalized_keyphrase).most_common(top_n)
-                if cnt >= self.min_cnt_keyword
-            ]
+        keywords = self.ranker.get_top_n_keywords(
+            text=keyphrase,
+            words=np.unique(normalized_keyphrase),
+            top_n=top_n,
         )
-
-        keywords = self.ranker.get_top_n_keywords(most_co_occurring_words, top_n)
 
         return keywords

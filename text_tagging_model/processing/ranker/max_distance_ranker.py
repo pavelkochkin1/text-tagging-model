@@ -12,9 +12,13 @@ class MaxDistanceRanker(BaseRanker):
 
     def get_ranked_embedding(
         self,
-        embeddings: np.ndarray[np.ndarray[float]],
+        text_embedding: np.ndarray,
+        embeddings: np.ndarray,
     ) -> np.ndarray[int]:
         distances = pairwise_distances(embeddings, metric=self.distance_metric).mean(axis=1)
         top_n_indices = (-distances).argsort()
-
         return top_n_indices
+
+    # def get_text_embedding(self, text: List[str]) -> np.ndarray:
+    #     # Переопределение не требуется, если ранжирование не зависит от текста.
+    #     return super().get_text_embedding(text)

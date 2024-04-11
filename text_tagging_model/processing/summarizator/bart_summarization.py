@@ -26,7 +26,6 @@ class MBartSummarizator:
             max_length=128,
             no_repeat_ngram_size=3,
             num_beams=10,
-            #             top_p=0.95
         )[0]
 
         if self.device == "cpu":
