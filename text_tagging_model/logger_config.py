@@ -40,5 +40,5 @@ class LoggerFactory:
         return local_logger
 
 
-logger = LoggerFactory().get_logger(level=logging.WARNING)
+logger = LoggerFactory().get_logger(level=logging.INFO)
 # sys.modules["logger"] = logger

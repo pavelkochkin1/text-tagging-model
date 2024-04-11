@@ -1,0 +1,1 @@
+from text_tagging_model.models.rake_based_model.tags_extractor import TagsExtractor
