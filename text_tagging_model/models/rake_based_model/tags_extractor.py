@@ -12,6 +12,27 @@ from text_tagging_model.processing.ranker.max_distance_ranker import MaxDistance
 
 
 class TagsExtractor(BaseExtractor):
+    """
+    A class used to extract tags from text based on keyword extraction, normalization, and ranking.
+
+    Args:
+        language (str): Language used for text processing. Defaults to 'russian'.
+        fasttext_model_path (str): Path to the FastText model used for word embeddings.
+        min_cnt_keyword (int): Minimum count for a keyword to be included in the tag results.
+
+    Attributes:
+        extractor (RakeKeyphrasesExtractor): Keyword extractor configured for specific language.
+        normalizer (NormalizersPipe): Pipeline of text normalizers.
+        ranker (MaxDistanceRanker):
+            Ranking mechanism for keywords based on distance metrics in embedding space.
+        min_cnt_keyword (int):
+            Minimum occurrence threshold for a word to be considered as a potential tag.
+
+    Methods:
+        extract(text: str, top_n: int) -> np.ndarray:
+            Extracts and returns top_n tags from the given text.
+    """
+
     def __init__(
         self,
         language: str = "russian",
@@ -37,20 +58,16 @@ class TagsExtractor(BaseExtractor):
         text: str,
         top_n: int,
     ) -> np.ndarray:
-        """Returns extracted keywords from the text
+        """
+        Extracts the top_n most relevant tags from the provided text.
 
         Args:
-            text (str): text to extract
-            top_n (int): number of words to extract
-            min_keyword_cnt (int): min number of words in the extracted phrases
-            distance_metric (str, optional): distance metric,
-            available ['cityblock', 'cosine', 'euclidean', 'l1', 'l2', 'manhattan'].
-            Defaults to "cosine".
+            text (str): The text from which to extract tags.
+            top_n (int): The number of tags to extract.
 
         Returns:
-            np.ndarray: array with extracted keywords
+            np.ndarray: An array of the top_n extracted tags.
         """
-
         keyphrases_with_scores = self.extractor.extract(text.lower())
         keyphrases = [text for _, text in keyphrases_with_scores]
 
@@ -65,7 +82,6 @@ class TagsExtractor(BaseExtractor):
             ]
         )
 
-        # keywords = most_co_occurring_words.tolist()
         keywords = self.ranker.get_top_n_keywords(normalized_words, most_co_occurring_words, top_n)
 
         return keywords
