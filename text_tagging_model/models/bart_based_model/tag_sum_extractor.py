@@ -10,20 +10,27 @@ from text_tagging_model.processing.summarizator.bart_summarization import MBartS
 
 class TagSumExtractor(BaseExtractor):
     """
-    The class is used to extract keywords from the text.
+    A class for extracting tags based on a summarized version of the input text,
+    using an embedding-based similarity ranking approach.
 
-    Attributes
-    ----------
-    language : str
-        language that will be used. available: 'russian', 'english'
-    model_name : str
-        Name of model from fasttext (will be download if not exists)
-        or path to already downloaded .bin file with embeddings.
+    Args:
+        summarizator_model (str): Model identifier for the summarization component.
+        embedder_model (str): Model identifier for the embedding component used by the ranker.
+        language (str): Language used for text processing. Defaults to 'russian'.
+        device (str): The device (e.g., 'cpu' or 'cuda') to use for computation. Defaults to 'cpu'.
 
-    Methods
-    -------
-    extract(text, top_n, min_keyword_cnt, distance_metric)
-        Returns list with extracted keywords
+    Attributes:
+        summarizator (MBartSummarizator):
+            A model used for summarizing input text to focus on main concepts.
+        normalizer (NormalizersPipe):
+            A pipeline of text normalizers
+            including punctuation and stopwords deletion, as well as noun retention.
+        ranker (TextSimRanker):
+            Ranks words based on their semantic similarity to the summarized text using embeddings.
+
+    Methods:
+        extract(text: str, top_n: int) -> np.ndarray:
+            Extracts and returns the top_n most relevant tags from the provided text.
     """
 
     def __init__(
@@ -51,20 +58,17 @@ class TagSumExtractor(BaseExtractor):
         text: str,
         top_n: int,
     ) -> np.ndarray:
-        """Returns extracted keywords from the text
+        """
+        Extracts the top_n most relevant tags from the summarized version of the provided text.
 
         Args:
-            text (str): text to extract
-            top_n (int): number of words to extract
-            min_keyword_cnt (int): min number of words in the extracted phrases
-            distance_metric (str, optional): distance metric,
-            available ['cityblock', 'cosine', 'euclidean', 'l1', 'l2', 'manhattan'].
-            Defaults to "cosine".
+            text (str): The text from which to extract tags.
+            top_n (int): The number of tags to extract.
 
         Returns:
-            np.ndarray: array with extracted keywords
+            np.ndarray: An array of the top_n extracted tags
+                based on their relevance to the summarized content.
         """
-
         keyphrase = self.summarizator.get_summary(text.lower())
         normalized_keyphrase = self.normalizer.normalize(keyphrase)
         keywords = self.ranker.get_top_n_keywords(

@@ -41,4 +41,3 @@ class LoggerFactory:
 
 
 logger = LoggerFactory().get_logger(level=logging.INFO)
-# sys.modules["logger"] = logger
